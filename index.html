@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vall Mobile | Catálogo Inteligente</title>
+    <!-- Tipografía Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde-vall: #A3D635;
+            --carbon: #1F2C32;
+            --blanco: #FFFFFF;
+            --nube: #F5F5F5;
+            --gris-texto: #5B6870;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        body {
+            background-color: var(--nube);
+            color: var(--carbon);
+            padding-bottom: 40px;
+        }
+        header {
+            background-color: var(--carbon);
+            color: var(--blanco);
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        header h1 span {
+            color: var(--verde-vall);
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        /* Filtros Rápidos */
+        .filtros-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+        .filtros-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .filtro-btn {
+            background: var(--blanco);
+            border: 1px solid #E2E8F0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .filtro-btn.active, .filtro-btn:hover {
+            background: var(--carbon);
+            color: var(--blanco);
+            border-color: var(--carbon);
+        }
+        /* Tarjetas de Producto */
+        .card {
+            background: var(--blanco);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .marca-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gris-texto);
+            letter-spacing: 1px;
+        }
+        .modelo-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--carbon);
+            margin-top: 2px;
+        }
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 14px 0;
+            background: var(--nube);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .financiamiento-box {
+            font-size: 0.85rem;
+            color: var(--gris-texto);
+            margin-bottom: 14px;
+        }
+        .financiamiento-box strong {
+            color: var(--carbon);
+        }
+        .btn-whatsapp {
+            display: block;
+            width: 100%;
+            background-color: var(--verde-vall);
+            color: var(--carbon);
+            font-weight: 800;
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(163, 214, 53, 0.3);
+            transition: transform 0.1s ease;
+        }
+        .btn-whatsapp:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Vall<span>Mobile</span></h1>
+        <p style="font-size: 0.8rem; color: #A0AEC0; margin-top: 4px;">Catálogo Inteligente & Financiamiento</p>
+    </header>
+
+    <div class="container">
+        <!-- Filtros Rápidos -->
+        <div class="filtros-scroll">
+            <button class="filtro-btn active" onclick="filtrar('todos')">Todos</button>
+            <button class="filtro-btn" onclick="filtrar('Samsung')">Samsung</button>
+            <button class="filtro-btn" onclick="filtrar('Motorola')">Motorola</button>
+            <button class="filtro-btn" onclick="filtrar('Xiaomi')">Xiaomi</button>
+            <button class="filtro-btn" onclick="filtrar('Honor')">Honor</button>
+            <button class="filtro-btn" onclick="filtrar('Infinix')">Infinix</button>
+            <button class="filtro-btn" onclick="filtrar('ZTE')">ZTE</button>
+            <button class="filtro-btn" onclick="filtrar('Oppo')">Oppo</button>
+        </div>
+
+        <!-- Contenedor del Catálogo Dinámico -->
+        <div id="catalogo-container"></div>
+    </div>
+
+    <script>
+        const equipos = [
+            { marca: "Samsung", modelo: "Galaxy A55 5G", ram: "8GB", almacenamiento: "256GB", camara: "50MP OIS", financieras: "PayJoy, Krece, Credi Cálidda", caliddaCero: true },
+            { marca: "Motorola", modelo: "Moto G54 5G", ram: "8GB", almacenamiento: "256GB", camara: "50MP OIS", financieras: "PayJoy, Krece, Credi Cálidda", caliddaCero: true },
+            { marca: "Xiaomi", modelo: "Redmi Note 13 Pro 5G", ram: "8GB", almacenamiento: "256GB", camara: "200MP OIS", financieras: "PayJoy, Krece, Credi Cálidda", caliddaCero: true },
+            { marca: "Honor", modelo: "Honor X8b", ram: "8GB", almacenamiento: "512GB", camara: "108MP", financieras: "PayJoy, Krece", caliddaCero: false },
+            { marca: "Infinix", modelo: "Spark 20 Pro+", ram: "8GB", almacenamiento: "256GB", camara: "108MP", financieras: "PayJoy, Krece, Credi Cálidda", caliddaCero: true }
+        ];
+
+        function renderCatalogo(filtroMarca = 'todos') {
+            const container = document.getElementById('catalogo-container');
+            container.innerHTML = '';
+
+            const filtrados = filtroMarca === 'todos' ? equipos : equipos.filter(e => e.marca === filtroMarca);
+
+            filtrados.forEach(eq => {
+                const textoWa = `¡Hola Vall Mobile! 👋%0AQuiero consultar la disponibilidad y financiamiento de:%0A📱 *${eq.marca} ${eq.modelo}* (${eq.almacenamiento})%0A🏦 Financieras: ${eq.financieras}%0A👤 Perfil: [Nuevo / Recurrente / Titular Cálidda]%0AMi nombre es:`;
+                const linkWa = `https://wa.me/51967282654?text=${textoWa}`;
+
+                let badgeCalidda = eq.caliddaCero ? '⚡ *Titular Cálidda:* ¡Posibilidad de S/0 inicial!' : '';
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <span class="marca-tag">${eq.marca}</span>
+                            <h2 class="modelo-title">${eq.modelo}</h2>
+                        </div>
+                    </div>
+                    <div class="specs-grid">
+                        <div>RAM: ${eq.ram}</div>
+                        <div>${eq.almacenamiento}</div>
+                        <div>${eq.camara}</div>
+                    </div>
+                    <div class="financiamiento-box">
+                        <p><strong>Financieras:</strong> ${eq.financieras}</p>
+                        <p style="margin-top: 4px; color: #2D3748;">${badgeCalidda}</p>
+                    </div>
+                    <a href="${linkWa}" target="_blank" class="btn-whatsapp">Cotizar por WhatsApp 💬</a>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filtrar(marca) {
+            document.querySelectorAll('.filtro-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderCatalogo(marca);
+        }
+
+        renderCatalogo();
+    </script>
+</body>
+</html>
